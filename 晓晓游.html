@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行攻略定制化App设计</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFD700',     // 黄色主色
+                        secondary: '#00CED1',   // 青色主色
+                        light: '#F5F5F5',       // 浅灰色
+                        dark: '#333333',        // 深灰色
+                        accent: '#FFA500',      // 橙色强调色
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .ios-status-bar {
+            height: 44px;
+        }
+        .bottom-nav {
+            height: 84px;
+            padding-bottom: 34px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 40px;
+            margin: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .duxx-bubble {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            z-index: 100;
+        }
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 2px;
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #F5F5F5;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #FFD700;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-10">旅行攻略定制化App设计</h1>
+        
+        <div class="flex flex-wrap justify-center">
+            <!-- 首页/攻略社区 -->
+            <div class="phone-frame bg-white">
+                <div class="ios-status-bar bg-white flex justify-between items-center px-5">
+                    <span class="text-xs font-semibold">10:30</span>
+                    <div class="flex space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 顶部搜索栏 -->
+                <div class="px-4 pt-2 pb-3 bg-primary">
+                    <div class="bg-white rounded-full flex items-center px-4 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <input type="text" placeholder="搜索目的地、攻略" class="ml-2 outline-none flex-1 text-sm" />
+                    </div>
+                </div>
+                
+                <!-- 攻略列表 -->
+                <div class="overflow-auto h-[calc(100%-128px)] bg-light pb-16">
+                    <!-- 分类标签 -->
+                    <div class="pt-3 px-4 flex space-x-2 text-sm overflow-x-auto whitespace-nowrap pb-3">
+                        <span class="px-3 py-1 bg-primary text-dark rounded-full">推荐</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">国内游</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">出境游</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">春季</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">亲子游</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">自驾</span>
+                    </div>
+                    
+                    <!-- 攻略卡片 -->
+                    <div class="p-3">
+                        <div class="bg-white rounded-lg overflow-hidden shadow-sm mb-4">
+                            <img src="https://source.unsplash.com/random/400x200/?travel,mountain" class="w-full h-48 object-cover" />
+                            <div class="p-3">
+                                <div class="flex justify-between">
+                                    <h3 class="font-bold text-dark">云南大理7日深度游</h3>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                        <span class="ml-1">328</span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">大理古城、洱海环游、双廊、丽江...</p>
+                                <div class="flex items-center mt-2">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-6 h-6 rounded-full" />
+                                    <span class="text-xs text-gray-500 ml-2">行者无疆</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg overflow-hidden shadow-sm mb-4">
+                            <img src="https://source.unsplash.com/random/400x200/?travel,beach" class="w-full h-48 object-cover" />
+                            <div class="p-3">
+                                <div class="flex justify-between">
+                                    <h3 class="font-bold text-dark">三亚5日度假攻略</h3>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                        <span class="ml-1">452</span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">亚龙湾、天涯海角、蜈支洲岛...</p>
+                                <div class="flex items-center mt-2">
+                                    <img src="https://randomuser.me/api/portraits/women/22.jpg" class="w-6 h-6 rounded-full" />
+                                    <span class="text-xs text-gray-500 ml-2">旅行日记本</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 度晓晓悬浮球 -->
+                <div class="duxx-bubble">
+                    <div class="bg-white rounded-full h-14 w-14 shadow-lg flex items-center justify-center border-2 border-secondary">
+                        <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-10 w-10" />
+                    </div>
+                </div>
+                
+                <!-- 底部导航 -->
+                <div class="bottom-nav bg-white fixed bottom-0 left-0 right-0 flex justify-around items-center border-t border-gray-200 pt-2">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                        </svg>
+                        <span class="text-xs text-primary">首页</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-gray-400">问答</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        <span class="text-xs text-gray-400">签到</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-gray-400">邀请</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 问答页面 -->
+            <div class="phone-frame bg-white">
+                <div class="ios-status-bar bg-white flex justify-between items-center px-5">
+                    <span class="text-xs font-semibold">10:30</span>
+                    <div class="flex space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 顶部搜索栏 -->
+                <div class="px-4 pt-2 pb-3 bg-secondary">
+                    <div class="bg-white rounded-full flex items-center px-4 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <input type="text" placeholder="搜索问题" class="ml-2 outline-none flex-1 text-sm" />
+                    </div>
+                </div>
+                
+                <!-- 问答列表 -->
+                <div class="overflow-auto h-[calc(100%-128px)] bg-light pb-16">
+                    <!-- 分类标签 -->
+                    <div class="pt-3 px-4 flex space-x-2 text-sm overflow-x-auto whitespace-nowrap pb-3">
+                        <span class="px-3 py-1 bg-secondary text-white rounded-full">热门</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">待回答</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">已解决</span>
+                        <span class="px-3 py-1 bg-white text-dark rounded-full">我的问答</span>
+                    </div>
+                    
+                    <!-- 问题卡片 -->
+                    <div class="p-3">
+                        <div class="bg-white rounded-lg p-4 shadow-sm mb-4">
+                            <h3 class="font-bold text-dark">西藏自驾游需要准备哪些必备物品？</h3>
+                            <p class="text-sm text-gray-500 mt-2">计划9月去西藏自驾，是第一次去高原地区，不太清楚需要准备什么，有经验的朋友能分享一下吗？</p>
+                            <div class="flex space-x-2 mt-3">
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#西藏</span>
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#自驾</span>
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#高原</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-6 h-6 rounded-full" />
+                                    <span class="text-xs text-gray-500 ml-2">高山流水</span>
+                                </div>
+                                <div class="text-xs text-gray-400">
+                                    3个回答
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 shadow-sm mb-4">
+                            <h3 class="font-bold text-dark">樱花季去日本，哪个城市最值得去？</h3>
+                            <p class="text-sm text-gray-500 mt-2">计划明年3-4月去日本看樱花，但时间有限只能选1-2个城市，请问哪里的樱花最美？</p>
+                            <div class="flex space-x-2 mt-3">
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#日本</span>
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#樱花</span>
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#春季</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/55.jpg" class="w-6 h-6 rounded-full" />
+                                    <span class="text-xs text-gray-500 ml-2">樱花雨</span>
+                                </div>
+                                <div class="text-xs text-gray-400">
+                                    12个回答
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI推荐问题 -->
+                        <div class="bg-white rounded-lg p-4 shadow-sm mb-4 border-2 border-secondary">
+                            <div class="flex items-center">
+                                <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-5 w-5" />
+                                <span class="text-xs text-secondary ml-1">AI推荐</span>
+                            </div>
+                            <h3 class="font-bold text-dark mt-2">三亚潜水哪个湾最适合初学者？</h3>
+                            <p class="text-sm text-gray-500 mt-2">我是潜水新手，想在三亚体验，请问哪个海湾水清、鱼多又安全？需要什么证件吗？</p>
+                            <div class="flex space-x-2 mt-3">
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#三亚</span>
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#潜水</span>
+                                <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#新手</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/17.jpg" class="w-6 h-6 rounded-full" />
+                                    <span class="text-xs text-gray-500 ml-2">蓝色海豚</span>
+                                </div>
+                                <div class="text-xs text-gray-400">
+                                    5个回答
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 度晓晓悬浮球 -->
+                <div class="duxx-bubble">
+                    <div class="bg-white rounded-full h-14 w-14 shadow-lg flex items-center justify-center border-2 border-secondary">
+                        <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-10 w-10" />
+                    </div>
+                </div>
+                
+                <!-- 底部导航 -->
+                <div class="bottom-nav bg-white fixed bottom-0 left-0 right-0 flex justify-around items-center border-t border-gray-200 pt-2">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                        </svg>
+                        <span class="text-xs text-gray-400">首页</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-secondary">问答</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        <span class="text-xs text-gray-400">签到</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-gray-400">邀请</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 签到页面 -->
+            <div class="phone-frame bg-white">
+                <div class="ios-status-bar bg-white flex justify-between items-center px-5">
+                    <span class="text-xs font-semibold">10:30</span>
+                    <div class="flex space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 顶部标题栏 -->
+                <div class="px-4 pt-2 pb-3 bg-primary">
+                    <h2 class="text-lg font-bold text-dark text
+                    <h2 class="text-lg font-bold text-dark text-center">每日签到</h2>
+                </div>
+                
+                <!-- 签到日历 -->
+                <div class="overflow-auto h-[calc(100%-128px)] bg-light pb-16">
+                    <!-- 签到卡片 -->
+                    <div class="bg-white mx-3 mt-3 rounded-lg shadow-sm p-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-dark">连续签到</h3>
+                            <span class="text-sm text-secondary">已连续签到 <b>5</b> 天</span>
+                        </div>
+                        
+                        <!-- 连续签到进度 -->
+                        <div class="flex justify-between mt-4 mb-2">
+                            <div class="flex flex-col items-center">
+                                <div class="calendar-day bg-primary flex-col">
+                                    <span class="text-xs">周一</span>
+                                    <span class="font-bold">1</span>
+                                </div>
+                                <span class="text-xs mt-1">+1</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="calendar-day bg-primary flex-col">
+                                    <span class="text-xs">周二</span>
+                                    <span class="font-bold">2</span>
+                                </div>
+                                <span class="text-xs mt-1">+1</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="calendar-day bg-primary flex-col">
+                                    <span class="text-xs">周三</span>
+                                    <span class="font-bold">3</span>
+                                </div>
+                                <span class="text-xs mt-1">+1</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="calendar-day bg-primary flex-col">
+                                    <span class="text-xs">周四</span>
+                                    <span class="font-bold">4</span>
+                                </div>
+                                <span class="text-xs mt-1">+1</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="calendar-day bg-primary flex-col">
+                                    <span class="text-xs">周五</span>
+                                    <span class="font-bold">5</span>
+                                </div>
+                                <span class="text-xs mt-1">+1</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="calendar-day bg-light flex-col border-2 border-dashed border-secondary">
+                                    <span class="text-xs">周六</span>
+                                    <span class="font-bold">6</span>
+                                </div>
+                                <span class="text-xs mt-1">+1</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="calendar-day bg-light flex-col border-2 border-dashed border-secondary">
+                                    <span class="text-xs">周日</span>
+                                    <span class="font-bold">7</span>
+                                </div>
+                                <span class="text-xs mt-1 font-bold text-accent">+2</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 签到按钮 -->
+                        <button class="w-full bg-primary text-dark font-bold py-2 rounded-full mt-4">
+                            立即签到
+                        </button>
+                    </div>
+                    
+                    <!-- 积分系统 -->
+                    <div class="bg-white mx-3 mt-4 rounded-lg shadow-sm p-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-dark">我的积分</h3>
+                            <span class="text-sm text-primary font-bold">130</span>
+                        </div>
+                        
+                        <!-- 积分进度条 -->
+                        <div class="mt-3">
+                            <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                <span>当前积分</span>
+                                <span>下一等级: 200积分</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 积分兑换 -->
+                        <h4 class="font-bold text-dark mt-5 mb-2">积分兑换</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-light rounded-lg p-2 flex flex-col items-center">
+                                <img src="https://source.unsplash.com/random/100x100/?luggage" class="w-16 h-16 object-cover rounded-md" />
+                                <p class="text-xs text-center mt-1">旅行收纳袋</p>
+                                <p class="text-xs text-secondary">100积分</p>
+                            </div>
+                            <div class="bg-light rounded-lg p-2 flex flex-col items-center">
+                                <img src="https://source.unsplash.com/random/100x100/?ticket" class="w-16 h-16 object-cover rounded-md" />
+                                <p class="text-xs text-center mt-1">景点门票8折券</p>
+                                <p class="text-xs text-secondary">150积分</p>
+                            </div>
+                            <div class="bg-light rounded-lg p-2 flex flex-col items-center">
+                                <img src="https://source.unsplash.com/random/100x100/?hotel" class="w-16 h-16 object-cover rounded-md" />
+                                <p class="text-xs text-center mt-1">酒店优惠券</p>
+                                <p class="text-xs text-secondary">200积分</p>
+                            </div>
+                            <div class="bg-light rounded-lg p-2 flex flex-col items-center">
+                                <img src="https://source.unsplash.com/random/100x100/?backpack" class="w-16 h-16 object-cover rounded-md" />
+                                <p class="text-xs text-center mt-1">旅行双肩包</p>
+                                <p class="text-xs text-secondary">500积分</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 排行榜 -->
+                    <div class="bg-white mx-3 mt-4 mb-4 rounded-lg shadow-sm p-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-dark">签到排行榜</h3>
+                            <div class="flex space-x-2 text-xs">
+                                <span class="px-2 py-1 bg-primary text-dark rounded-full">周榜</span>
+                                <span class="px-2 py-1 bg-light text-dark rounded-full">总榜</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 前三名 -->
+                        <div class="flex justify-around mt-4">
+                            <div class="flex flex-col items-center">
+                                <div class="relative">
+                                    <img src="https://randomuser.me/api/portraits/men/71.jpg" class="w-12 h-12 rounded-full border-2 border-secondary" />
+                                    <div class="absolute -top-2 -right-2 bg-secondary text-white w-5 h-5 rounded-full flex items-center justify-center text-xs">2</div>
+                                </div>
+                                <p class="text-xs mt-1">旅行家</p>
+                                <p class="text-xs text-secondary">28天</p>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="relative">
+                                    <img src="https://randomuser.me/api/portraits/women/32.jpg" class="w-14 h-14 rounded-full border-2 border-primary" />
+                                    <div class="absolute -top-2 -right-2 bg-primary text-dark w-5 h-5 rounded-full flex items-center justify-center text-xs">1</div>
+                                </div>
+                                <p class="text-xs mt-1">环游世界</p>
+                                <p class="text-xs text-primary">30天</p>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="relative">
+                                    <img src="https://randomuser.me/api/portraits/men/25.jpg" class="w-12 h-12 rounded-full border-2 border-accent" />
+                                    <div class="absolute -top-2 -right-2 bg-accent text-white w-5 h-5 rounded-full flex items-center justify-center text-xs">3</div>
+                                </div>
+                                <p class="text-xs mt-1">流浪者</p>
+                                <p class="text-xs text-accent">25天</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 其他排名 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <div class="flex items-center">
+                                    <span class="text-xs bg-light w-5 h-5 rounded-full flex items-center justify-center mr-2">4</span>
+                                    <img src="https://randomuser.me/api/portraits/women/45.jpg" class="w-8 h-8 rounded-full mr-2" />
+                                    <span class="text-xs">小鱼儿</span>
+                                </div>
+                                <span class="text-xs text-gray-500">23天</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <div class="flex items-center">
+                                    <span class="text-xs bg-light w-5 h-5 rounded-full flex items-center justify-center mr-2">5</span>
+                                    <img src="https://randomuser.me/api/portraits/men/65.jpg" class="w-8 h-8 rounded-full mr-2" />
+                                    <span class="text-xs">旅途中</span>
+                                </div>
+                                <span class="text-xs text-gray-500">20天</span>
+                            </div>
+                            <!-- 当前用户排名 -->
+                            <div class="flex justify-between items-center py-2 bg-light rounded-lg px-2 mt-2">
+                                <div class="flex items-center">
+                                    <span class="text-xs bg-secondary text-white w-5 h-5 rounded-full flex items-center justify-center mr-2">8</span>
+                                    <img src="https://randomuser.me/api/portraits/women/22.jpg" class="w-8 h-8 rounded-full mr-2" />
+                                    <span class="text-xs font-bold">我</span>
+                                </div>
+                                <span class="text-xs text-gray-500">16天</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 度晓晓悬浮球 -->
+                <div class="duxx-bubble">
+                    <div class="bg-white rounded-full h-14 w-14 shadow-lg flex items-center justify-center border-2 border-secondary">
+                        <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-10 w-10" />
+                    </div>
+                </div>
+                
+                <!-- 底部导航 -->
+                <div class="bottom-nav bg-white fixed bottom-0 left-0 right-0 flex justify-around items-center border-t border-gray-200 pt-2">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                        </svg>
+                        <span class="text-xs text-gray-400">首页</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-gray-400">问答</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        <span class="text-xs text-primary">签到</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-gray-400">邀请</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 邀请有礼页面 -->
+            <div class="phone-frame bg-white">
+                <div class="ios-status-bar bg-white flex justify-between items-center px-5">
+                    <span class="text-xs font-semibold">10:30</span>
+                    <div class="flex space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 顶部标题栏 -->
+                <div class="px-4 pt-2 pb-3 bg-accent">
+                    <h2 class="text-lg font-bold text-white text-center">邀请有礼</h2>
+                </div>
+                
+                <!-- 邀请内容 -->
+                <div class="overflow-auto h-[calc(100%-128px)] bg-light pb-16">
+                    <!-- 邀请奖励展示 -->
+                    <div class="relative bg-white mx-3 mt-3 rounded-lg shadow-sm p-4 overflow-hidden">
+                        <div class="absolute -right-10 -top-10 bg-primary opacity-20 rounded-full w-40 h-40"></div>
+                        <h3 class="font-bold text-dark text-lg">邀请好友，双重奖励</h3>
+                        <p class="text-sm text-gray-500 mt-1">您和好友都可获得100积分</p>
+                        
+                        <!-- 进度条 -->
+                        <div class="mt-6">
+                            <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                <span>已邀请：2人</span>
+                                <span>累计奖励：200积分</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-secondary" style="width: 40%;"></div>
+                            </div>
+                            
+                            <!-- 奖励节点 -->
+                            <div class="relative mt-2">
+                                <div class="flex justify-between text-xs">
+                                    <div class="flex flex-col items-center w-16">
+                                        <div class="bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center mb-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        <span>1人</span>
+                                        <span>100积分</span>
+                                    </div>
+                                    <div class="flex flex-col items-center w-16">
+                                        <div class="bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center mb-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        <span>2人</span>
+                                        <span>200积分</span>
+                                    </div>
+                                    <div class="flex flex-col items-center w-16">
+                                        <div class="bg-light text-gray-400 rounded-full w-6 h-6 flex items-center justify-center mb-1">3</div>
+                                        <span>5人</span>
+                                        <span>收纳包</span>
+                                    </div>
+                                    <div class="flex flex-col items-center w-16">
+                                        <div class="bg-light text-gray-400 rounded-full w-6 h-6 flex items-center justify-center mb-1">4</div>
+                                        <span>10人</span>
+                                        <span>双肩包</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 邀请码 -->
+                    <div class="bg-white mx-3 mt-4 rounded-lg shadow-sm p-4 flex flex-col items-center">
+                        <h3 class="font-bold text-dark">您的专属邀请码</h3>
+                        <div class="bg-light rounded-lg p-3 mt-3 w-full flex justify-center">
+                            <span class="font-bold tracking-widest text-lg">TRAVEL2023</span>
+                        </div>
+                        <button class="bg-secondary text-white text-sm rounded-full px-4 py-2 mt-3 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                            </svg>
+                            复制邀请码
+                        </button>
+                        
+                        <!-- 二维码 -->
+                        <div class="mt-4 border-4 border-primary rounded-lg p-2">
+                            <div class="bg-white p-2 w-40 h-40 flex items-center justify-center">
+                                <svg viewBox="0 0 100 100" class="w-full h-full">
+                                    <path d="M30,30 L30,40 L40,40 L40,30 Z" fill="#000" />
+                                    <path d="M50,30 L50,40 L60,40 L60,30 Z" fill="#000" />
+                                    <path d="M70,30 L70,40 L80,40 L80,30 Z" fill="#000" />
+                                    <path d="M30,50 L30,60 L40,60 L40,50 Z" fill="#000" />
+                                    <path d="M50,50 L50,60 L60,60 L60,50 Z" fill="#000" />
+                                    <path d="M70,50 L70,60 L80,60 L80,50 Z" fill="#000" />
+                                    <path d="M30,70 L30,80 L40,80 L40,70 Z" fill="#000" />
+                                    <path d="M50,70 L50,80 L60,80 L60,70 Z" fill="#000" />
+                                    <path d="M70,70 L70,80 L80,80 L80,70 Z" fill="#000" />
+                                    <rect x="20" y="20" width="60" height="60" stroke="#000" fill="none" stroke-width="1" />
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3">扫码邀请好友，或将邀请链接分享给好友</p>
+                    </div>
+                    
+                    <!-- 分享按钮 -->
+                    <div class="bg-white mx-3 mt-4 mb-4 rounded-lg shadow-sm p-4">
+                        <h3 class="font-bold text-dark text-center mb-4">分享方式</h3>
+                        <div class="grid grid-cols-4 gap-2">
+                            <div class="flex flex-col items-center">
+                                <div class="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                </div>
+                                <span class="text-xs">微信</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <span class="text-xs">朋友圈</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <span class="text-xs">微博</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="bg-blue-500 w-12 h-12 rounded-full flex items-center justify-center mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                    </svg>
+                                </div>
+                                <span class="text-xs">复制链接</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-accent text-white font-bold py-3 rounded-full mt-4">
+                            立即邀请
+                        </button>
+                        
+                        <!-- 已邀请好友 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-dark">已邀请好友</h3>
+                                <span class="text-xs text-secondary">查看全部</span>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                    <div class="flex items-center">
+                                        <img src="https://randomuser.me/api/portraits/women/33.jpg" class="w-8 h-8 rounded-full mr-2" />
+                                        <div>
+                                            <p class="text-xs font-bold">小鹿斑比</p>
+                                            <p class="text-xs text-gray-400">3天前加入</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-green-500">+100积分</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <div class="flex items-center">
+                                        <img src="https://randomuser.me/api/portraits/men/42.jpg" class="w-8 h-8 rounded-full mr-2" />
+                                        <div>
+                                            <p class="text-xs font-bold">旅行者</p>
+                                            <p class="text-xs text-gray-400">5天前加入</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-green-500">+100积分</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 度晓晓悬浮球 -->
+                <div class="duxx-bubble">
+                    <div class="bg-white rounded-full h-14 w-14 shadow-lg flex items-center justify-center border-2 border-secondary">
+                        <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-10 w-10" />
+                    </div>
+                </div>
+                
+                <!-- 底部导航 -->
+                <div class="bottom-nav bg-white fixed bottom-0 left-0 right-0 flex justify-around items-center border-t border-gray-200 pt-2">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                        </svg>
+                        <span class="text-xs text-gray-400">首页</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-gray-400">问答</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                        <span class="text-xs text-gray-400">签到</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-xs text-accent">邀请</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 攻略详情页面 -->
+            <div class="phone-frame bg-white">
+                <div class="ios-status-bar bg-white flex justify-between items-center px-5">
+                    <span class="text-xs font-semibold">10:30</span>
+                    <div class="flex space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 攻略封面图 -->
+                <div class="relative h-64">
+                    <img src="https://source.unsplash.com/random/400x300/?travel,mountain" class="w-full h-full object-cover" />
+                    <div class="absolute top-0 left-0 right-0 p-4 flex justify-between items-center">
+                        <button class="bg-black bg-opacity-30 rounded-full p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button class="bg-black bg-opacity-30 rounded-full p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
+                        <h2 class="text-xl font-bold text-white">云南大理7日深度游</h2>
+                        <div class="flex items-center mt-1">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-6 h-6 rounded-full" />
+                            <span class="text-xs text-white ml-2">行者无疆</span>
+                            <span class="text-xs text-white ml-2">2023-05-15</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 攻略内容 -->
+                <div class="overflow-auto h-[calc(100%-64px-64px)] bg-white pb-16">
+                    <!-- 标签 -->
+                    <div class="flex space-x-2 text-xs p-4">
+                        <span class="px-2 py-1 bg-light text-gray-600 rounded-full">#云南</span>
+                        <span class="px-2 py-1 bg-light text-gray-600 rounded-full">#大理</span>
+                        <span class="px-2 py-1 bg-light text-gray-600 rounded-full">#丽江</span>
+                        <span class="px-2 py-1 bg-light text-gray-600 rounded-full">#自由行</span>
+                    </div>
+                    
+                    <!-- 行程概览 -->
+                    <div class="px-4 mb-4">
+                        <div class="flex items-center mb-2">
+                            <div class="w-4 h-4 bg-primary rounded-full mr-2"></div>
+                            <h3 class="font-bold text-dark">行程概览</h3>
+                        </div>
+                        <div class="ml-6 text-sm text-gray-600">
+                            <p>- 行程天数：7天</p>
+                            <p>- 最佳季节：春季、秋季</p>
+                            <p>- 花费预算：4000-6000元/人</p>
+                            <p>- 适合人群：情侣、闺蜜、小团体</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 地图嵌入 -->
+                    <div class="px-4 mb-4">
+                        <div class="flex items-center mb-2">
+                            <div class="w-4 h-4 bg-primary rounded-full mr-2"></div>
+                            <h3 class="font-bold text-dark">行程地图</h3>
+                        </div>
+                        <div class="rounded-lg overflow-hidden h-48 bg-gray-200 relative">
+                            <img src="https://source.unsplash.com/random/400x200/?map" class="w-full h-full object-cover" />
+                            <div class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 行程时间轴 -->
+                    <div class="px-4 mb-4">
+                        <div class="flex items-center mb-2">
+                            <div class="w-4 h-4 bg-primary rounded-full mr-2"></div>
+                            <h3 class="font-bold text-dark">行程安排</h3>
+                        </div>
+                        
+                        <!-- DAY 1 -->
+                        <div class="relative ml-6 pb-6">
+                            <div class="absolute top-0 left-0 bottom-0 w-0.5 bg-primary"></div>
+                            <div class="absolute top-0 left-0 w-3 h-3 -ml-1.5 rounded-full bg-primary border-2 border-white"></div>
+                            <div class="pl-6">
+                                <h4 class="font-bold text-dark">DAY 1: 昆明</h4>
+                                <p class="text-sm text-gray-600 mt-1">抵达昆明，入住市区酒店。可在翠湖公园散步，晚上品尝过桥米线。</p>
+                                <div class="mt-2 flex space-x-2">
+                                    <img src="https://source.unsplash.com/random/100x100/?kunming" class="w-16 h-16 rounded-md object-cover" />
+                                    <img src="https://source.unsplash.com/random/100x100/?food,noodle" class="w-16 h-16 rounded-md object-cover" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DAY 2 -->
+                        <div class="relative ml-6 pb-6">
+                            <div class="absolute top-0 left-0 bottom-0 w-0.5 bg-primary"></div>
+                            <div class="absolute top-0 left-0 w-3 h-3 -ml-1.5 rounded-full bg-primary border-2 border-white"></div>
+                            <div class="pl-6">
+                                <h4 class="font-bold text-dark">DAY 2: 昆明-大理</h4>
+                                <p class="text-sm text-gray-600 mt-1">上午参观石林，下午乘高铁前往大理，晚上可在古城漫步。</p>
+                                <div class="mt-2 flex space-x-2">
+                                    <img src="https://source.unsplash.com/random/100x100/?stone,forest" class="w-16 h-16 rounded-md object-cover" />
+                                    <img src="https://source.unsplash.com/random/100x100/?dali,old,town" class="w-16 h-16 rounded-md object-cover" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DAY 3 -->
+                        <div class="relative ml-6 pb-6">
+                            <div class="absolute top-0 left-0 bottom-0 w-0.5 bg-primary"></div>
+                            <div class="absolute top-0 left-0 w-3 h-3 -ml-1.5 rounded-full bg-primary border-2 border-white"></div>
+                            <div class="pl-6">
+                                <h4 class="font-bold text-dark">DAY 3: 大理-洱海环游</h4>
+                                <p class="text-sm text-gray-600 mt-1">租电动车环洱海，停留双廊、才村等地，欣赏洱海风光。</p>
+                                <div class="mt-2 flex space-x-2">
+                                    <img src="https://source.unsplash.com/random/100x100/?lake" class="w-16 h-16 rounded-md object-cover" />
+                                    <img src="https://source.unsplash.com/random/100x100/?village,water" class="w-16 h-16 rounded-md object-cover" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 更多天数 (折叠) -->
+                        <div class="text-center text-xs text-secondary">
+                            <span>点击展开更多4天行程</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 小贴士 -->
+                    <div class="px-4 mb-4">
+                        <div class="flex items-center mb-2">
+                            <div class="w-4 h-4 bg-secondary rounded-full mr-2"></div>
+                            <h3 class="font-bold text-dark">实用小贴士</h3>
+                        </div>
+                        <div class="ml-6 text-sm text-gray-600">
+                            <p class="mb-1">1. 大理早晚温差大，建议带薄外套</p>
+                            <p class="mb-1">2. 高原地区紫外线强，注意防晒</p>
+                            <p class="mb-1">3. 洱海环湖路段部分收费，准备现金</p>
+                            <p class="mb-1">4. 丽江古城内住宿价格偏高，可考虑古城外</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户评论 -->
+                    <div class="px-4 mb-4">
+                        <div class="flex items-center mb-2">
+                            <div class="w-4 h-4 bg-secondary rounded-full mr-2"></div>
+                            <h3 class="font-bold text-dark">用户评论</h3>
+                        </div>
+                        
+                        <!-- 评论列表 -->
+                        <div class="ml-6">
+                            <div class="bg-light rounded-lg p-3 mb-3">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/22.jpg" class="w-6 h-6 rounded-full" />
+                                    <div class="ml-2">
+                                        <p class="text-xs font-bold">夏日小溪</p>
+                                        <div class="flex text-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">按照攻略去玩了一趟，行程安排非常合理，特别是洱海环湖的路线推荐太棒了！遇到了绝美的日落。</p>
+                                <div class="flex justify-between items-center mt-2 text-xs text-gray-400">
+                                    <span>3天前</span>
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                        </svg>
+                                        <span>23</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-light rounded-lg p-3 mb-3">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/75.jpg" class="w-6 h-6 rounded-full" />
+                                    <div class="ml-2">
+                                        <p class="text-xs font-bold">背包客</p>
+                                        <div class="flex text-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">整体不错，但丽江古城太商业化了，建议可以多安排些周边自然景点。住宿推荐很赞！</p>
+                                <div class="flex justify-between items-center mt-2 text-xs text-gray-400">
+                                    <span>1周前</span>
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                        </svg>
+                                        <span>17</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 查看更多评论 -->
+                            <div class="text-center text-xs text-secondary">
+                                <span>查看全部36条评论</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部互动栏 -->
+                <div class="bg-white border-t border-gray-100 p-4 fixed bottom-0 left-0 right-0 flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex flex-col items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                            <span class="text-xs">328</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <span class="text-xs">45</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                            </svg>
+                            <span class="text-xs">分享</span>
+                        </div>
+                    </div>
+                    <button class="bg-secondary text-white px-4 py-2 rounded-full text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        保存行程
+                    </button>
+                </div>
+                
+                <!-- 度晓晓悬浮球 -->
+                <div class="duxx-bubble">
+                    <div class="bg-white rounded-full h-14 w-14 shadow-lg flex items-center justify-center border-2 border-secondary">
+                        <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-10 w-10" />
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 问答详情页面 -->
+            <div class="phone-frame bg-white">
+                <div class="ios-status-bar bg-white flex justify-between items-center px-5">
+                    <span class="text-xs font-semibold">10:30</span>
+                    <div class="flex space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 顶部栏 -->
+                <div class="bg-secondary text-white p-4">
+                    <div class="flex items-center">
+                        <button class="mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h2 class="flex-1 text-center font-bold">问题详情</h2>
+                        <button>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 问题内容 -->
+                <div class="overflow-auto h-[calc(100%-96px)] bg-light pb-20">
+                    <div class="bg-white p-4">
+                        <h3 class="font-bold text-lg text-dark">西藏自驾游需要准备哪些必备物品？</h3>
+                        <div class="flex space-x-2 mt-3">
+                            <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#西藏</span>
+                            <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#自驾</span>
+                            <span class="px-2 py-0.5 bg-light text-xs text-gray-500 rounded-full">#高原</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-3">
+                            计划9月去西藏自驾，是第一次去高原地区，不太清楚需要准备什么，有经验的朋友能分享一下吗？主要是担心高原反应，也不知道沿途加油、住宿方便不方便，需要提前预定吗？行车路况怎么样？
+                        </p>
+                        <div class="flex justify-between items-center mt-4">
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-6 h-6 rounded-full" />
+                                <span class="text-xs text-gray-500 ml-2">高山流水</span>
+                            </div>
+                            <span class="text-xs text-gray-400">2023-05-10 14:30</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 最佳回答 -->
+                    <div class="mt-2 bg-white p-4">
+                        <div class="flex justify-between">
+                            <div class="flex items-center">
+                                <span class="bg-primary text-dark text-xs font-bold px-2 py-0.5 rounded-full mr-2">最佳回答</span>
+                                <img src="https://randomuser.me/api/portraits/men/62.jpg" class="w-6 h-6 rounded-full" />
+                                <span class="text-xs text-gray-500 ml-2">蓝天白云</span>
+                            </div>
+                            <span class="text-xs text-gray-400">2023-05-10 16:45</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-3">
+                            <p>作为一个去过三次西藏的老司机，给你一份详细清单：</p>
+                            <p class="font-bold mt-2">1. 高原反应准备</p>
+                            <p>- 红景天（提前2周服用）</p>
+                            <p>- 葡萄糖</p>
+                            <p>- 高原安（急救用）</p>
+                            <p>- 便携式氧气瓶（一定要带）</p>
+                            <p>- 感冒药、肠胃药、创可贴等常用药</p>
+                            
+                            <p class="font-bold mt-2">2. 车辆准备</p>
+                            <p>- 备胎（必须）</p>
+                            <p>- 千斤顶</p>
+                            <p>- 汽车充气泵</p>
+                            <p>- 牵引绳</p>
+                            <p>- 足够的玻璃水</p>
+                            <p>- 车载充电器、充电宝</p>
+                            
+                            <p class="font-bold mt-2">3. 个人装备</p>
+                            <p>- 防晒霜（SPF50+）</p>
+                            <p>- 墨镜（防紫外线）</p>
+                            <p>- 保暖衣物（即使夏天晚上也很冷）</p>
+                            <p>- 保温水杯</p>
+                            <p>- 湿巾、纸巾</p>
+                            
+                            <p class="font-bold mt-2">4. 路况和加油信息</p>
+                            <p>川藏线G318沿线加油站基本上200-300公里就有一个，但建议看到油站就加油，不要等油量太少。拉萨、日喀则等大城市周边加油方便，偏远地区要提前规划。</p>
+                            
+                            <p class="font-bold mt-2">5. 住宿建议</p>
+                            <p>旺季（5-10月）建议提前预订，特别是拉萨、林芝这些热门地区。阿里、那曲等偏远地区住宿条件有限，但基本都有招待所。</p>
+                            
+                            <div class="mt-3 flex space-x-2">
+                                <img src="https://source.unsplash.com/random/100x100/?tibet,road" class="w-24 h-16 rounded-md object-cover" />
+                                <img src="https://source.unsplash.com/random/100x100/?mountain,snow" class="w-24 h-16 rounded-md object-cover" />
+                            </div>
+                            
+                            <p class="text-secondary mt-3">最重要的是：不要急着赶路，注意休息，前三天不要洗澡，多喝水，少吃肉多吃蔬菜水果！</p>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                    </svg>
+                                    <span class="text-xs ml-1">56</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    <span class="text-xs ml-1">回复</span>
+                                </div>
+                            </div>
+                            <button class="bg-secondary text-white px-3 py-1 rounded-full text-xs">
+                                采纳
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- AI回答 -->
+                    <div class="mt-2 bg-white p-4 border-l-4 border-secondary">
+                        <div class="flex justify-between">
+                            <div class="flex items-center">
+                                <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-6 w-6 mr-2" />
+                                <span class="text-xs text-secondary font-bold">度晓晓智能回答</span>
+                            </div>
+                            <span class="text-xs text-gray-400">2023-05-10 14:35</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-3">
+                            <p>除了上面回答提到的重要物品，我再补充几点：</p>
+                            
+                            <p class="font-bold mt-2">1. 证件准备</p>
+                            <p>- 身份证、驾驶证、行驶证（必备）</p>
+                            <p>- 边防证（如果去林芝、阿里等边境地区需提前办理）</p>
+                            <p>- 现金（部分地区可能不方便刷卡、移动支付）</p>
+                            
+                            <p class="font-bold mt-2">2. 导航与通信</p>
+                            <p>- 下载离线地图（部分地区信号不好）</p>
+                            <p>- 卫星电话/对讲机（偏远地区建议）</p>
+                            
+                            <p class="font-bold mt-2">3. 最佳自驾路线推荐</p>
+                            <p>9月是西藏最佳旅游季节之一，推荐以下路线：</p>
+                            <p>拉萨→纳木错→当雄→羊八井→拉萨（3天）</p>
+                            <p>拉萨→山南→羊卓雍错→日喀则→珠峰大本营→拉萨（5天）</p>
+                            
+                            <p class="mt-2">我还为您找到了最近三个月内往返西藏的用户推荐的住宿地点，您可以点击下方链接查看详细信息。</p>
+                            
+                            <div class="bg-light rounded-lg p-3 mt-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                </svg>
+                                <div class="ml-3">
+                                    <p class="text-sm font-bold">西藏自驾游住宿攻略</p>
+                                    <p class="text-xs text-gray-500">包含30+网友实测推荐</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                    </svg>
+                                    <span class="text-xs ml-1">32</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    <span class="text-xs ml-1">回复</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-secondary">AI生成</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 其他回答 -->
+                    <div class="mt-2 bg-white p-4">
+                        <div class="flex justify-between">
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/42.jpg" class="w-6 h-6 rounded-full" />
+                                <span class="text-xs text-gray-500 ml-2">行走的地图</span>
+                            </div>
+                            <span class="text-xs text-gray-400">2023-05-11 09:22</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-3">
+                            <p>前面两位回答得很详细了，我就补充一点自己的经验吧。我去年十月去的西藏，自驾走的川藏线。</p>
+                            <p class="mt-2">路况方面，国道基本都是柏油路，但部分地区会有塌方、修路情况。特别是雨季（6-8月）可能会有泥石流。所以出发前一定要查看路况信息，我推荐关注"西藏旅游交通"微信公众号。</p>
+                            <p class="mt-2">另外，一定要保持车速均匀，不要急加速急刹车，否则很容易高原反应加重。在海拔4000米以上路段，发动机功率会下降，所以超车要格外小心。</p>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                                    </svg>
+                                    <span class="text-xs ml-1">18</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    <span class="text-xs ml-1">回复</span>
+                                </div>
+                            </div>
+                            <button class="border border-secondary text-secondary px-3 py-1 rounded-full text-xs">
+                                采纳
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部互动栏 -->
+                <div class="bg-white border-t border-gray-100 p-3 fixed bottom-0 left-0 right-0">
+                    <div class="flex items-center">
+                        <div class="bg-light rounded-full flex-1 flex items-center px-3 py-2">
+                            <input type="text" placeholder="写下你的回答..." class="bg-transparent outline-none flex-1 text-sm" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <button class="bg-secondary text-white ml-2 px-3 py-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 度晓晓悬浮球 -->
+                <div class="duxx-bubble">
+                    <div class="bg-white rounded-full h-14 w-14 shadow-lg flex items-center justify-
+                    <div class="bg-white rounded-full h-14 w-14 shadow-lg flex items-center justify-center border-2 border-secondary">
+                        <img src="https://aigc-app.baidu.com/media/duxiaoxiao/favicon.ico" class="h-10 w-10" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>                                                                                                                        
